@@ -33,9 +33,11 @@ import br.com.alura.panucci.sampledata.bottomAppBarItems
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
+import br.com.alura.panucci.ui.screens.CheckoutScreen
 import br.com.alura.panucci.ui.screens.DrinksListScreen
 import br.com.alura.panucci.ui.screens.HighlightsListScreen
 import br.com.alura.panucci.ui.screens.MenuListScreen
+import br.com.alura.panucci.ui.screens.ProductDetailsScreen
 import br.com.alura.panucci.ui.theme.PanucciTheme
 
 private const val TAG = "MainActivity"
@@ -48,7 +50,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             LaunchedEffect(Unit) {
-                navController.addOnDestinationChangedListener{ _, _, _ ->
+                navController.addOnDestinationChangedListener { _, _, _ ->
                     val routes = navController.backQueue.map {
                         it.destination.route
                     }
@@ -78,17 +80,42 @@ class MainActivity : ComponentActivity() {
                                 popUpTo(route)
                             }
                         },
-                        onFabClick = {
+                        onNavigateToCheckout = {
+                            navController.navigate("checkout")
                         }) {
                         NavHost(navController = navController, startDestination = "highlight") {
                             composable("highlight") {
-                                HighlightsListScreen(products = sampleProducts)
+                                HighlightsListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                        navController.navigate("productDetails")
+                                    },
+                                    onNavigateToCheckout = {
+                                        navController.navigate("checkout")
+                                    },
+                                )
                             }
                             composable("menu") {
-                                MenuListScreen(products = sampleProducts)
+                                MenuListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                        navController.navigate("productDetails")
+                                    },
+                                )
                             }
                             composable("drinks") {
-                                DrinksListScreen(products = sampleProducts)
+                                DrinksListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                        navController.navigate("productDetails")
+                                    },
+                                )
+                            }
+                            composable("productDetails") {
+                                ProductDetailsScreen(product = sampleProducts.random())
+                            }
+                            composable("checkout") {
+                                CheckoutScreen(products = sampleProducts)
                             }
                         }
 
@@ -105,7 +132,7 @@ class MainActivity : ComponentActivity() {
 fun PanucciApp(
     bottomAppBarItemSelected: BottomAppBarItem = bottomAppBarItems.first(),
     onBottomAppBarItemSelectedChange: (BottomAppBarItem) -> Unit = {},
-    onFabClick: () -> Unit = {},
+    onNavigateToCheckout: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -125,7 +152,7 @@ fun PanucciApp(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onFabClick
+                onClick = onNavigateToCheckout
             ) {
                 Icon(
                     Icons.Filled.PointOfSale,
