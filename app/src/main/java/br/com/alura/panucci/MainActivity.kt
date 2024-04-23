@@ -30,6 +30,7 @@ import br.com.alura.panucci.sampledata.bottomAppBarItems
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
+import br.com.alura.panucci.ui.screens.DrinksListScreen
 import br.com.alura.panucci.ui.screens.HighlightsListScreen
 import br.com.alura.panucci.ui.screens.MenuListScreen
 import br.com.alura.panucci.ui.theme.PanucciTheme
@@ -53,16 +54,20 @@ class MainActivity : ComponentActivity() {
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             selectedItem = it
+                            navController.navigate(it.route)
                         },
                         onFabClick = {
                         }) {
                         // TODO IMPLEMENTAR O NAV HOST
-                        NavHost(navController = navController, startDestination = "home") {
-                            composable("home") {
+                        NavHost(navController = navController, startDestination = "highlight") {
+                            composable("highlight") {
                                 HighlightsListScreen(products = sampleProducts)
                             }
                             composable("menu") {
                                 MenuListScreen(products = sampleProducts)
+                            }
+                            composable("drinks") {
+                                DrinksListScreen(products = sampleProducts)
                             }
                         }
 

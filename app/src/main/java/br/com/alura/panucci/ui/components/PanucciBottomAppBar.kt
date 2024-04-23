@@ -10,10 +10,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.alura.panucci.sampledata.bottomAppBarItems
 import br.com.alura.panucci.ui.theme.PanucciTheme
+import java.math.RoundingMode
 
 class BottomAppBarItem(
     val label: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val route: String
 )
 
 @Composable
