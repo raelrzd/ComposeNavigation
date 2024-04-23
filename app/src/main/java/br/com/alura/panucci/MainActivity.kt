@@ -1,6 +1,7 @@
 package br.com.alura.panucci
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +38,24 @@ import br.com.alura.panucci.ui.screens.HighlightsListScreen
 import br.com.alura.panucci.ui.screens.MenuListScreen
 import br.com.alura.panucci.ui.theme.PanucciTheme
 
+private const val TAG = "MainActivity"
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+
+            LaunchedEffect(Unit) {
+                navController.addOnDestinationChangedListener{ _, _, _ ->
+                    val routes = navController.backQueue.map {
+                        it.destination.route
+                    }
+                    Log.i(TAG, "onCreate: back stack - $routes")
+                }
+            }
+
             val backStackEntryState by navController.currentBackStackEntryAsState()
             val currentDestination = backStackEntryState?.destination
             PanucciTheme {
@@ -58,7 +72,11 @@ class MainActivity : ComponentActivity() {
                     PanucciApp(
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
-                            navController.navigate(it.route)
+                            val route = it.route
+                            navController.navigate(route) {
+                                launchSingleTop = true
+                                popUpTo(route)
+                            }
                         },
                         onFabClick = {
                         }) {
