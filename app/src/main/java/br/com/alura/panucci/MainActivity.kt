@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import br.com.alura.panucci.navigation.PanucciNavHost
 import br.com.alura.panucci.navigation.drinksRoute
 import br.com.alura.panucci.navigation.highlightsListRoute
@@ -91,16 +92,27 @@ class MainActivity : ComponentActivity() {
                     PanucciApp(
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = { item ->
-                            when (item) {
-                                BottomAppBarItem.Drinks -> navController.navigateToDrinks()
-                                BottomAppBarItem.HighlightsList -> navController.navigateToHighlightsList()
-                                BottomAppBarItem.Menu -> navController.navigateToMenu()
+                            val (route, navigate) = when (item) {
+                                BottomAppBarItem.Drinks -> Pair(
+                                    drinksRoute,
+                                    navController::navigateToDrinks
+                                )
+
+                                BottomAppBarItem.HighlightsList -> Pair(
+                                    highlightsListRoute,
+                                    navController::navigateToHighlightsList
+                                )
+
+                                BottomAppBarItem.Menu -> Pair(
+                                    menuRoute,
+                                    navController::navigateToMenu
+                                )
                             }
-//                            val route = it.destination
-//                            navController.navigate(route) {
-//                                launchSingleTop = true
-//                                popUpTo(route)
-//                            }
+                            val navOptions = navOptions {
+                                launchSingleTop = true
+                                popUpTo(route)
+                            }
+                            navigate(navOptions)
                         },
                         onNavigateToCheckout = {
                             navController.navigateToCheckout()
