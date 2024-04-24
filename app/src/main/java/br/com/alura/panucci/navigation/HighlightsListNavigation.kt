@@ -6,16 +6,22 @@ import androidx.navigation.compose.composable
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.screens.HighlightsListScreen
 
+internal const val highlightsListRoute = "highlight"
+
 fun NavGraphBuilder.highlightsListScreen(navController: NavController) {
-    composable(AppDestination.Highlight.route) {
+    composable(highlightsListRoute) {
         HighlightsListScreen(
             products = sampleProducts,
             onNavigateToDetails = { product ->
-                navController.navigate("${AppDestination.ProductDetails.route}/${product.id}")
+                navController.navigateToProductDetails(product.id)
             },
             onNavigateToCheckout = {
-                navController.navigate(AppDestination.Checkout.route)
+                navController.navigateToCheckout()
             },
         )
     }
+}
+
+fun NavController.navigateToHighlightsList() {
+    navigate(highlightsListRoute)
 }
