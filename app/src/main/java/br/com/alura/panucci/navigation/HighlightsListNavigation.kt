@@ -19,7 +19,7 @@ fun NavGraphBuilder.highlightsListScreen(navController: NavController) {
         HighlightsListScreen(
             uiState = uiState,
             onNavigateToDetails = { product ->
-                navController.navigateToProductDetails(product.id)
+                navController.navigateToProductDetails(product.price.toPlainString())
             },
             onNavigateToCheckout = {
                 navController.navigateToCheckout()
