@@ -20,14 +20,10 @@ class ProductDetailsViewModel(
 
     fun findProductById(id: String) {
         _uiState.update { ProductDetailsUiState.Loading }
-        viewModelScope.launch {
-            val timemillis = Random.nextLong(500, 2000)
-            delay(timemillis)
-            val dataState = dao.findById(id)?.let { product ->
-                ProductDetailsUiState.Success(product = product)
-            } ?: ProductDetailsUiState.Failure
-            _uiState.update { dataState }
-        }
+        val dataState = dao.findById(id)?.let { product ->
+            ProductDetailsUiState.Success(product = product)
+        } ?: ProductDetailsUiState.Failure
+        _uiState.update { dataState }
     }
 
 }
